@@ -56,9 +56,7 @@ def validate_audio_file(path: str) -> list[PolicyViolation]:
         violations.append(PolicyViolation("EMPTY_FILE", "File is empty"))
     elif size > MAX_FILE_SIZE_BYTES:
         mb = size / (1024 * 1024)
-        violations.append(
-            PolicyViolation("FILE_TOO_LARGE", f"File size {mb:.0f}MB exceeds limit of 4096MB")
-        )
+        violations.append(PolicyViolation("FILE_TOO_LARGE", f"File size {mb:.0f}MB exceeds limit of 4096MB"))
 
     return violations
 
@@ -109,8 +107,7 @@ def validate_config(
         violations.append(
             PolicyViolation(
                 "MISSING_HF_TOKEN",
-                "Hugging Face token is required for speaker diarization. "
-                "Set HF_TOKEN env var or pass --hf-token.",
+                "Hugging Face token is required for speaker diarization. Set HF_TOKEN env var or pass --hf-token.",
             )
         )
 

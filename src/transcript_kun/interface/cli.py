@@ -11,11 +11,11 @@ import time
 from transcript_kun.application.transcribe import TranscribeAudioUseCase
 from transcript_kun.domain.entities import TranscriptionConfig
 from transcript_kun.domain.policies import (
-    PolicyError,
     VALID_COMPUTE_TYPES,
     VALID_DEVICES,
     VALID_MODELS,
     VALID_OUTPUT_FORMATS,
+    PolicyError,
 )
 from transcript_kun.infrastructure.audio_prober import FfprobeAudioProber
 from transcript_kun.infrastructure.whisperx_service import WhisperXTranscriptionService
@@ -30,24 +30,28 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("audio_file", help="Path to the audio file (m4a, mp3, wav, etc.)")
     parser.add_argument("-o", "--output", help="Output file path (default: <stem>_transcript.<fmt>)")
     parser.add_argument(
-        "-f", "--format",
+        "-f",
+        "--format",
         choices=sorted(VALID_OUTPUT_FORMATS),
         default="txt",
         help="Output format (default: txt)",
     )
     parser.add_argument(
-        "-m", "--model",
+        "-m",
+        "--model",
         choices=sorted(VALID_MODELS),
         default="large-v3",
         help="Whisper model (default: large-v3)",
     )
     parser.add_argument(
-        "-l", "--language",
+        "-l",
+        "--language",
         default="ja",
         help="Language code (default: ja)",
     )
     parser.add_argument(
-        "-d", "--device",
+        "-d",
+        "--device",
         choices=sorted(VALID_DEVICES),
         default="cpu",
         help="Compute device (default: cpu)",
@@ -87,7 +91,8 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Maximum number of speakers for diarization",
     )
     parser.add_argument(
-        "-v", "--verbose",
+        "-v",
+        "--verbose",
         action="store_true",
         help="Enable verbose logging",
     )

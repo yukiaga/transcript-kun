@@ -80,7 +80,7 @@ class TestGetWriter:
     def test_unknown_format(self):
         try:
             get_writer("pdf")
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError as e:
             assert "pdf" in str(e)
 

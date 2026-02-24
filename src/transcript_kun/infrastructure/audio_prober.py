@@ -33,8 +33,10 @@ class FfprobeAudioProber(AudioProber):
             result = subprocess.run(
                 [
                     ffprobe,
-                    "-v", "quiet",
-                    "-print_format", "json",
+                    "-v",
+                    "quiet",
+                    "-print_format",
+                    "json",
                     "-show_format",
                     path,
                 ],

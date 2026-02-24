@@ -3,13 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 
 from transcript_kun.domain.entities import Segment, TranscriptionConfig, TranscriptionResult
 from transcript_kun.domain.ports import ProgressCallback, TranscriptionService
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 

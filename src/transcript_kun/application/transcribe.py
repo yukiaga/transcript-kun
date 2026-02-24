@@ -59,9 +59,7 @@ class TranscribeAudioUseCase:
 
         # --- Check engine availability ---
         if not self._transcription_service.is_available():
-            raise RuntimeError(
-                "WhisperX is not installed. Install it with: pip install whisperx"
-            )
+            raise RuntimeError("WhisperX is not installed. Install it with: pip install whisperx")
 
         # --- Probe audio ---
         info = self._audio_prober.probe(audio_path)
