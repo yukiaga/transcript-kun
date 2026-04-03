@@ -34,6 +34,7 @@ class TestCLIErrors:
         with patch.dict("os.environ", {}, clear=True):
             # Ensure HF_TOKEN is not set
             import os
+
             old = os.environ.pop("HF_TOKEN", None)
             try:
                 code = main([str(p)])

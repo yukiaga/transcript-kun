@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -29,9 +29,7 @@ class TranscriptionResult:
 
     @property
     def full_text(self) -> str:
-        return "\n".join(
-            f"[{s.speaker or '?'}] {s.text}" for s in self.segments
-        )
+        return "\n".join(f"[{s.speaker or '?'}] {s.text}" for s in self.segments)
 
     @property
     def duration_seconds(self) -> float:

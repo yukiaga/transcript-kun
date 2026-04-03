@@ -14,30 +14,26 @@
 ## 前提条件
 
 - Python 3.10+
+- [uv](https://docs.astral.sh/uv/)（パッケージマネージャー）
 - ffmpeg（音声ファイルの読み込みに必要）
 - GPU (NVIDIA, VRAM 8GB+) 推奨。CPU でも動作可能
 - Hugging Face アカウント（話者分離を使う場合）
   - [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1) の利用規約に同意が必要
   - [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0) の利用規約に同意が必要
 
-## インストール
+## セットアップ
+
+### uv のインストール
 
 ```bash
-# リポジトリをクローン
-git clone https://github.com/yukiaga/transcript-kun.git
-cd transcript-kun
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# WhisperX をインストール（GPU環境）
-pip install whisperx
+# Homebrew
+brew install uv
 
-# WhisperX をインストール（CPU環境）
-pip install whisperx
-
-# transcript-kun をインストール
-pip install -e .
-
-# 開発用（テスト込み）
-pip install -e ".[dev]"
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
 ### ffmpeg のインストール
@@ -50,12 +46,29 @@ sudo apt install ffmpeg
 brew install ffmpeg
 ```
 
+### プロジェクトのセットアップ
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/yukiaga/transcript-kun.git
+cd transcript-kun
+
+# 依存関係のインストール（仮想環境の作成も自動）
+uv sync
+
+# GPU 環境の場合（WhisperX を含む）
+uv sync --extra gpu
+
+# 開発用（テスト・リンター込み）
+uv sync --dev
+```
+
 ## 使い方
 
 ### 基本（話者分離なし）
 
 ```bash
-transcript-kun audio.m4a --no-diarize
+uv run transcript-kun audio.m4a --no-diarize
 ```
 
 ### 話者分離あり（推奨）
@@ -65,26 +78,26 @@ transcript-kun audio.m4a --no-diarize
 export HF_TOKEN="hf_your_token_here"
 
 # 実行
-transcript-kun audio.m4a
+uv run transcript-kun audio.m4a
 ```
 
 ### GPU を使う場合
 
 ```bash
-transcript-kun audio.m4a -d cuda --compute-type float16
+uv run transcript-kun audio.m4a -d cuda --compute-type float16
 ```
 
 ### 出力形式を指定
 
 ```bash
 # SRT字幕形式
-transcript-kun audio.m4a -f srt --no-diarize
+uv run transcript-kun audio.m4a -f srt --no-diarize
 
 # JSON（プログラムで後処理しやすい）
-transcript-kun audio.m4a -f json --no-diarize
+uv run transcript-kun audio.m4a -f json --no-diarize
 
 # TSV（スプレッドシートにインポート）
-transcript-kun audio.m4a -f tsv --no-diarize
+uv run transcript-kun audio.m4a -f tsv --no-diarize
 ```
 
 ### モデルサイズを変更
@@ -93,13 +106,13 @@ transcript-kun audio.m4a -f tsv --no-diarize
 
 ```bash
 # 高精度（デフォルト、VRAM 10GB+推奨）
-transcript-kun audio.m4a -m large-v3 --no-diarize
+uv run transcript-kun audio.m4a -m large-v3 --no-diarize
 
 # 中程度（VRAM 5GB程度）
-transcript-kun audio.m4a -m medium --no-diarize
+uv run transcript-kun audio.m4a -m medium --no-diarize
 
 # 軽量（VRAM 2GB程度、精度は落ちる）
-transcript-kun audio.m4a -m small --no-diarize
+uv run transcript-kun audio.m4a -m small --no-diarize
 ```
 
 ### 話者数を指定（精度向上）
@@ -107,13 +120,13 @@ transcript-kun audio.m4a -m small --no-diarize
 事前に話者の人数がわかっている場合：
 
 ```bash
-transcript-kun audio.m4a --min-speakers 2 --max-speakers 3
+uv run transcript-kun audio.m4a --min-speakers 2 --max-speakers 3
 ```
 
 ### python -m でも実行可能
 
 ```bash
-python -m transcript_kun audio.m4a --no-diarize
+uv run python -m transcript_kun audio.m4a --no-diarize
 ```
 
 ## 全オプション一覧
@@ -177,6 +190,30 @@ options:
 }
 ```
 
+## 開発
+
+### 開発環境のセットアップ
+
+```bash
+uv sync --dev
+```
+
+### テスト
+
+```bash
+uv run pytest
+uv run pytest -v              # 詳細出力
+uv run pytest --cov           # カバレッジ付き
+```
+
+### リント・フォーマット
+
+```bash
+uv run ruff check src/ tests/       # リントチェック
+uv run ruff check --fix src/ tests/  # 自動修正
+uv run ruff format src/ tests/       # フォーマット
+```
+
 ## プロジェクト構成
 
 ```
@@ -195,7 +232,8 @@ transcript-kun/
 │   └── interface/       # インターフェース層：CLI
 │       └── cli.py
 ├── tests/               # テスト
-├── pyproject.toml
+├── pyproject.toml       # プロジェクト設定・依存関係
+├── uv.lock              # ロックファイル（uv が自動管理）
 └── README.md
 ```
 

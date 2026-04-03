@@ -31,9 +31,7 @@ class FakeTranscriptionService(TranscriptionService):
     ) -> TranscriptionResult:
         self.call_count += 1
         return TranscriptionResult(
-            segments=(
-                Segment(start=0.0, end=1.0, text="Test segment", speaker="SPEAKER_00"),
-            ),
+            segments=(Segment(start=0.0, end=1.0, text="Test segment", speaker="SPEAKER_00"),),
             language=config.language,
             audio_path=audio_path,
         )
